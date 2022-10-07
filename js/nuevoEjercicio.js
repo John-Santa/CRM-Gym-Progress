@@ -6,7 +6,7 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         conectarDB();
-        formulario.addEventListener('submit', validarCliente);
+        formulario.addEventListener('submit', validarEjercicio);
 
     });
 
@@ -47,7 +47,7 @@
         }
     }
 
-    const validarCliente = (event) => {
+    const validarEjercicio = (event) => {
         event.preventDefault();
 
         // Leer todos los inputs
@@ -60,13 +60,53 @@
             rango = document.querySelector('#rango').value,
             peso = document.querySelector('#peso').value,
             repeticiones = document.querySelector('#repeticiones').value,
-            series = document.querySelector('#series').value;
+            series = document.querySelector('#series').value
+            recomendaciones = document.querySelector('#recomendaciones').value;
+
 
             if (nombre_ejercicio === '' || grupo_muscular === '' || peso === '' || repeticiones === '' || series === '') {
                 imprimirAlerta('Los campos son obligatorios', 'error');
                 return;
             }
+
+            // Crear un objeto con la información
+            const ejercicio = {
+                id: Date.now(),
+                nombre_ejercicio,
+                grupo_muscular,
+                maquina,
+                talla,
+                banca,
+                espaldar,
+                rango,
+                peso,
+                repeticiones,
+                series,
+                recomendaciones
+            }
+
+            crearNuevoEjercicio(ejercicio);
     };
+
+    const crearNuevoEjercicio = (ejercicio) => {
+        const transaction = DB.transaction(['crm'], 'readwrite');
+
+        const objectStore = transaction.objectStore('crm');
+        objectStore.add(ejercicio);
+
+        transaction.onerror = () => {
+            imprimirAlerta('Hubo un error', 'error');
+        }
+
+        transaction.oncomplete = () => {
+            imprimirAlerta('Ejercicio agregado correctamente');
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 4000);
+        }
+
+    }
 
 
 })();
