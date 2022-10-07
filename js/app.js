@@ -56,7 +56,7 @@
                 const cursor = event.target.result;
 
                 if (cursor) {
-                    const { nombre_ejercicio, grupo_muscular, maquina, talla, banca, espaldar, rango, peso, repeticiones, series, recomendaciones } = cursor.value;
+                    const { id, nombre_ejercicio, grupo_muscular, maquina, talla, banca, espaldar, rango, peso, repeticiones, series, recomendaciones } = cursor.value;
 
                     const listadoEjercicios = document.querySelector('#listado-ejercicios');
 
@@ -96,8 +96,8 @@
                                 <p class="text-sm leading-5 text-gray-700"> ${recomendaciones} </p>
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-gray-200 text-sm leading-5 font-medium">
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900 mr-5">Editar</a>
-                                <a href="#" data-id="${cursor.value.id}" class="text-red-600 hover:text-red-900 eliminar">Eliminar</a>
+                                <a href="editar-ejercicio.html?id=${id}" class="text-orange-600 hover:text-orange-900 mr-5">Editar</a>
+                                <a href="#" data-ejercicio="${id}" class="text-red-600 hover:text-red-900 eliminar">Eliminar</a>
                             </td>
                         </tr>
                     `;
