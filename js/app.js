@@ -1,6 +1,7 @@
 (function() {
 
     let DB;
+    const listadoEjercicios = document.querySelector('#listado-ejercicios');
 
     document.addEventListener('DOMContentLoaded', function() {
         crearDB();
@@ -8,7 +9,35 @@
         if (window.indexedDB.open('crm', 1)) {
             obtenerEjercicios();
         }
+
+        listadoEjercicios.addEventListener('click', eliminarRegistro);
     });
+
+    const eliminarRegistro = (event) => {
+
+        if (event.target.classList.contains('eliminar')) {
+            const idEliminar = Number(event.target.dataset.ejercicio);
+
+            const confirmar = confirm('¿Deseas eliminar este ejercicio?');
+
+            if (confirmar) {
+                const transaction = DB.transaction(['crm'], 'readwrite');
+                const objectStore = transaction.objectStore('crm');
+
+                objectStore.delete(idEliminar);
+
+                transaction.oncomplete = function() {
+                    console.log('Eliminado');
+                    event.target.parentElement.parentElement.remove();
+                }
+
+                transaction.onerror = function() {
+                    console.log('Hubo un error');
+                }
+            }
+        }
+
+    }
 
     const crearDB = () => {
         const db = window.indexedDB.open('crm', 1);
@@ -58,7 +87,6 @@
                 if (cursor) {
                     const { id, nombre_ejercicio, grupo_muscular, maquina, talla, banca, espaldar, rango, peso, repeticiones, series, recomendaciones } = cursor.value;
 
-                    const listadoEjercicios = document.querySelector('#listado-ejercicios');
 
                     listadoEjercicios.innerHTML += `
                         <tr>
